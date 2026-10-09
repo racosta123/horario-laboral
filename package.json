@@ -16,7 +16,8 @@
     "hooks": "git config core.hooksPath tools/hooks",
     "contraste": "node tools/contraste.mjs",
     "auditar:pwa": "node tools/auditar-pwa.mjs",
-    "verificar": "npm run test && npm run contraste && npm run audit"
+    "verificar": "npm run test && npm run contraste && npm run audit",
+    "verify:apikey": "node tools/verify-apikey.mjs"
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "6.0.0",
