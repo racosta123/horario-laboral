@@ -1,0 +1,33 @@
+name = "horario-laboral-proxy"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+workers_dev = true
+preview_urls = false
+
+# Variables NO sensibles (públicas por diseño).
+[vars]
+FIREBASE_PROJECT_ID = "horario-laboral-d14"
+ALLOWED_ORIGINS = "https://racosta123.github.io"
+# En desarrollo, localhost se agrega SOLO en .dev.vars (ignorado por git):
+#   DEV_ORIGINS = "http://localhost:5173,http://127.0.0.1:5173"
+
+# Secrets (NUNCA aquí; se cargan con `wrangler secret put <NOMBRE>`):
+#   SERVICE_ACCOUNT_JSON  JSON de la cuenta de servicio de Firebase (Admin)
+#   SETUP_TOKEN           token aleatorio (>= 32 caracteres) para dar de alta al superadmin UNA vez; borrar después
+
+# Evidencias (selfies): bucket R2 PRIVADO. Sin r2.dev ni dominio público: solo este Worker lee y escribe.
+[[r2_buckets]]
+binding = "EVIDENCIAS"
+bucket_name = "horario-laboral-evidencias"
+
+# Límite de peticiones por IP / usuario.
+[[durable_objects.bindings]]
+name = "RATE_LIMITER"
+class_name = "RateLimiter"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["RateLimiter"]
+
+[observability]
+enabled = true

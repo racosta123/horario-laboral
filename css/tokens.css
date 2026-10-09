@@ -1,0 +1,77 @@
+/* Horario Laboral — tokens del sistema de diseño.
+   Concepto: viva, luminosa y llena de color. Fondo blanco, sin modo oscuro.
+   Colores intensos SOLO en acciones, íconos, gráficas y estados; fondos en pastel. */
+
+@font-face { font-family: "Figtree"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/figtree-400.woff2") format("woff2"); }
+@font-face { font-family: "Figtree"; font-style: normal; font-weight: 500; font-display: swap; src: url("../fonts/figtree-500.woff2") format("woff2"); }
+@font-face { font-family: "Figtree"; font-style: normal; font-weight: 600; font-display: swap; src: url("../fonts/figtree-600.woff2") format("woff2"); }
+@font-face { font-family: "Figtree"; font-style: normal; font-weight: 700; font-display: swap; src: url("../fonts/figtree-700.woff2") format("woff2"); }
+@font-face { font-family: "Figtree"; font-style: normal; font-weight: 800; font-display: swap; src: url("../fonts/figtree-800.woff2") format("woff2"); }
+
+:root {
+  color-scheme: light;
+
+  /* Superficies */
+  --blanco: #FFFFFF;
+  --fondo: #F5FAFF;
+  --borde: #E2EAF2;
+  --linea: #EEF3F8;
+
+  /* Texto */
+  --texto: #183153;
+  --texto-2: #64748B;
+
+  /* Paleta: intenso / pastel / texto de estado (contraste AA sobre su pastel) */
+  --turquesa: #0F9D94;   --turquesa-claro: #EAF8F7;  --turquesa-oscuro: #0B7F78;
+  --azul: #3B82F6;       --azul-claro: #EFF6FF;      --azul-texto: #1D4ED8;
+  --verde: #22C55E;      --verde-claro: #ECFDF3;     --verde-texto: #15803D;
+  --violeta: #8B5CF6;    --violeta-claro: #F5F3FF;   --violeta-texto: #6D28D9;
+  --ambar: #F59E0B;      --ambar-claro: #FFFAEB;     --ambar-texto: #B45309;
+  --rojo: #EF4444;       --rojo-claro: #FEF2F2;      --rojo-texto: #B91C1C;
+
+  /* Acción principal: texto blanco sobre turquesa oscuro (contraste ≥ 4.5:1) */
+  --accion: var(--turquesa-oscuro);
+  --accion-hover: #096B65;
+  --foco: #3B82F6;
+
+  /* Tipografía */
+  --fuente: "Figtree", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --t-xs: 0.75rem;   /* 12 */
+  --t-sm: 0.875rem;  /* 14 */
+  --t-md: 1rem;      /* 16 */
+  --t-lg: 1.125rem;  /* 18 */
+  --t-xl: 1.5rem;    /* 24 */
+  --t-2xl: 2rem;     /* 32 */
+  --t-3xl: 2.75rem;  /* 44 */
+  --t-hora: 3.5rem;  /* 56: hora grande de la jornada */
+  --tracking-titulo: -0.02em;
+
+  /* Espaciado (múltiplos de 4) */
+  --e-1: 4px; --e-2: 8px; --e-3: 12px; --e-4: 16px; --e-5: 20px; --e-6: 24px; --e-8: 32px; --e-10: 40px;
+
+  /* Radios */
+  --r-sm: 8px;
+  --r-boton: 12px;
+  --r-tarjeta: 16px;
+  --r-pildora: 999px;
+
+  /* Sombras muy ligeras */
+  --sombra: 0 1px 2px rgba(24, 49, 83, 0.04), 0 2px 8px rgba(24, 49, 83, 0.04);
+  --sombra-hover: 0 4px 16px rgba(24, 49, 83, 0.08);
+
+  /* Tamaños */
+  --cuadro-icono: 46px;
+  --alto-boton: 44px;
+  --alto-boton-grande: 96px;
+  --ancho-menu: 248px;
+
+  /* Movimiento (breve; se anula con prefers-reduced-motion) */
+  --dur: 160ms;
+  --dur-lenta: 600ms;
+  --curva: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur: 0ms; --dur-lenta: 0ms; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}

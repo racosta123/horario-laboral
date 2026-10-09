@@ -1,0 +1,10 @@
+{
+  "name": "horario-laboral-proxy",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Worker proxy de Horario Laboral. Cero dependencias en tiempo de ejecución.",
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  }
+}

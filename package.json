@@ -1,0 +1,30 @@
+{
+  "name": "horario-laboral",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Horario Laboral (Diagonal Catorce) - Fase 0. Las dependencias son SOLO de build/test; en tiempo de ejecución nada se carga de terceros.",
+  "scripts": {
+    "build:vendor": "node tools/build-vendor.mjs",
+    "build:iconos": "node tools/generar-iconos.mjs",
+    "test": "npm run test:worker && npm run test:rules",
+    "test:worker": "node --test worker/test/*.test.js",
+    "test:rules": "node tools/con-java.mjs firebase emulators:exec --only firestore --project demo-horario-laboral \"node --test tests/*.test.js\"",
+    "secretos": "node tools/scan-secrets.mjs",
+    "audit": "npm audit --audit-level=low && node tools/scan-secrets.mjs",
+    "serve": "node tools/serve.mjs",
+    "hooks": "git config core.hooksPath tools/hooks",
+    "contraste": "node tools/contraste.mjs",
+    "auditar:pwa": "node tools/auditar-pwa.mjs",
+    "verificar": "npm run test && npm run contraste && npm run audit"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "6.0.0",
+    "@fontsource/figtree": "5.3.0",
+    "esbuild": "0.28.2",
+    "firebase": "13.0.0"
+  },
+  "overrides": {
+    "@grpc/grpc-js": "^1.14.5"
+  }
+}

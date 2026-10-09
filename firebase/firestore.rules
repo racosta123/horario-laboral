@@ -1,0 +1,94 @@
+rules_version = '2';
+
+// Horario Laboral — reglas de Firestore (Fase 0).
+// Principios:
+//   1. Cerrado por defecto: lo que no se permite explícitamente, se niega.
+//   2. Ningún cliente escribe NADA. Todas las escrituras pasan por el Worker (Admin / cuenta de servicio),
+//      que es quien pone la hora del servidor y valida permisos.
+//   3. El rol y la empresa vienen SOLO de los custom claims (los asigna el Worker). Una cuenta sin
+//      claims (p. ej. alguien que se auto-registró con la apiKey pública) no tiene ningún acceso.
+//   4. Interruptor de baja inmediata: además del claim, el perfil usuarios/{uid} debe estar activo y
+//      coincidir en rol y empresa. Dar de baja el perfil corta el acceso aunque el token siga vigente.
+//   5. Nadie lee otra empresa. El superadmin (Diagonal Catorce) solo ve la ficha de cada empresa,
+//      no los datos de sus trabajadores.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function autenticado() { return request.auth != null; }
+    function claims() { return request.auth.token; }
+    function rol() { return claims().get('rol', ''); }
+    function empresaClaim() { return claims().get('empresaId', ''); }
+    function perfilPath() { return /databases/$(database)/documents/usuarios/$(request.auth.uid); }
+
+    // Perfil existente, activo y congruente con los claims del token.
+    function perfilValido() {
+      let p = get(perfilPath()).data;
+      return exists(perfilPath())
+        && p.get('activo', false) == true
+        && p.get('rol', '') == rol()
+        && p.get('empresaId', '') == empresaClaim();
+    }
+
+    function tieneRol(roles) { return autenticado() && rol() in roles && perfilValido(); }
+    function superadmin() { return tieneRol(['superadmin']); }
+    function deEmpresa(empresaId) { return empresaClaim() is string && empresaClaim() != '' && empresaClaim() == empresaId; }
+    function adminDe(empresaId) { return tieneRol(['admin_empresa']) && deEmpresa(empresaId); }
+    function staffDe(empresaId) { return tieneRol(['admin_empresa', 'supervisor']) && deEmpresa(empresaId); }
+    function trabajadorDe(empresaId) { return tieneRol(['trabajador']) && deEmpresa(empresaId); }
+    function miembroDe(empresaId) { return tieneRol(['admin_empresa', 'supervisor', 'trabajador']) && deEmpresa(empresaId); }
+    // El documento es del propio trabajador (campo uid escrito por el Worker).
+    function esMio() { return resource.data.get('uid', '') == request.auth.uid; }
+
+    // Perfil mínimo. Solo el dueño lo lee y solo si ya tiene un rol asignado.
+    match /usuarios/{uid} {
+      allow get: if autenticado() && request.auth.uid == uid
+        && rol() in ['superadmin', 'admin_empresa', 'supervisor', 'trabajador'];
+      allow list, write: if false;
+    }
+
+    match /empresas/{empresaId} {
+      allow get: if superadmin() || miembroDe(empresaId);
+      allow list: if superadmin();
+      allow write: if false;
+
+      match /sucursales/{sucursalId} {
+        allow read: if miembroDe(empresaId);
+        allow write: if false;
+      }
+
+      // El id del documento del trabajador es su uid de Firebase Auth.
+      match /trabajadores/{trabajadorUid} {
+        allow read: if staffDe(empresaId) || (trabajadorDe(empresaId) && trabajadorUid == request.auth.uid);
+        allow write: if false;
+      }
+
+      match /horarios/{horarioId} {
+        allow read: if staffDe(empresaId) || (trabajadorDe(empresaId) && esMio());
+        allow write: if false;
+      }
+
+      // Registros de asistencia: los escribe SOLO el Worker con la hora del servidor.
+      match /registros/{registroId} {
+        allow read: if staffDe(empresaId) || (trabajadorDe(empresaId) && esMio());
+        allow create, update, delete: if false;
+      }
+
+      // Convenios (aceptación del registro electrónico): solo lectura.
+      match /convenios/{convenioId} {
+        allow read: if staffDe(empresaId) || (trabajadorDe(empresaId) && esMio());
+        allow create, update, delete: if false;
+      }
+
+      // Bitácora inmutable de auditoría: solo el admin de la empresa la consulta.
+      match /bitacora/{entradaId} {
+        allow read: if adminDe(empresaId);
+        allow create, update, delete: if false;
+      }
+    }
+
+    // Cualquier otra ruta (incluidas subcolecciones nuevas no previstas): negada.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

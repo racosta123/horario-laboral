@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex">
+  <title>Sistema de diseño · Horario Laboral</title>
+  <link rel="icon" href="icons/favicon-32.png" type="image/png">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/componentes.css">
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/diseno.css">
+  <script type="module" src="js/diseno.js"></script>
+</head>
+<body>
+<div class="d-pagina">
+
+  <header class="d-cabecera">
+    <div class="logo">
+      <span class="logo__marca"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#reloj"/></svg></span>
+      <span><span class="logo__nombre">Horario Laboral</span><br><span class="logo__por">por Diagonal Catorce</span></span>
+    </div>
+    <h1 class="titulo-grande">Sistema de diseño</h1>
+    <p class="secundario">Fase 0 · Para aprobación. Todos los datos de esta página son de ejemplo. Logo provisional: el definitivo de Diagonal Catorce se coloca después.</p>
+  </header>
+
+  <!-- 1. Colores -->
+  <section class="d-seccion">
+    <h2>Colores</h2>
+    <p class="secundario">Intensos solo en acciones, íconos, gráficas y estados. Fondos en pastel. Texto de estado oscuro sobre su pastel.</p>
+    <div class="d-colores">
+      <div class="d-color"><span class="d-muestra m-turquesa"></span><b>Turquesa</b><code>#0F9D94</code><span class="d-muestra d-muestra--chica m-turquesa-claro"></span><code>#EAF8F7</code><span class="d-muestra d-muestra--chica m-turquesa-oscuro"></span><code>#0B7F78 botones</code></div>
+      <div class="d-color"><span class="d-muestra m-azul"></span><b>Azul</b><code>#3B82F6</code><span class="d-muestra d-muestra--chica m-azul-claro"></span><code>#EFF6FF</code><span class="d-muestra d-muestra--chica m-azul-texto"></span><code>#1D4ED8 texto</code></div>
+      <div class="d-color"><span class="d-muestra m-verde"></span><b>Verde</b><code>#22C55E</code><span class="d-muestra d-muestra--chica m-verde-claro"></span><code>#ECFDF3</code><span class="d-muestra d-muestra--chica m-verde-texto"></span><code>#15803D texto</code></div>
+      <div class="d-color"><span class="d-muestra m-violeta"></span><b>Violeta</b><code>#8B5CF6</code><span class="d-muestra d-muestra--chica m-violeta-claro"></span><code>#F5F3FF</code><span class="d-muestra d-muestra--chica m-violeta-texto"></span><code>#6D28D9 texto</code></div>
+      <div class="d-color"><span class="d-muestra m-ambar"></span><b>Ámbar</b><code>#F59E0B</code><span class="d-muestra d-muestra--chica m-ambar-claro"></span><code>#FFFAEB</code><span class="d-muestra d-muestra--chica m-ambar-texto"></span><code>#B45309 texto</code></div>
+      <div class="d-color"><span class="d-muestra m-rojo"></span><b>Rojo</b><code>#EF4444</code><span class="d-muestra d-muestra--chica m-rojo-claro"></span><code>#FEF2F2</code><span class="d-muestra d-muestra--chica m-rojo-texto"></span><code>#B91C1C texto</code></div>
+      <div class="d-color"><span class="d-muestra m-texto"></span><b>Texto</b><code>#183153</code><span class="d-muestra d-muestra--chica m-texto-2"></span><code>#64748B secundario</code></div>
+      <div class="d-color"><span class="d-muestra m-fondo"></span><b>Fondo</b><code>#F5FAFF</code><span class="d-muestra d-muestra--chica m-borde"></span><code>#E2EAF2 borde</code><span class="d-muestra d-muestra--chica m-linea"></span><code>#EEF3F8 línea</code></div>
+    </div>
+  </section>
+
+  <!-- 2. Tipografía -->
+  <section class="d-seccion">
+    <h2>Tipografía · Figtree</h2>
+    <div class="tarjeta d-tipos">
+      <p class="d-t800">Buenos días, Rubén <span class="secundario">800</span></p>
+      <p class="d-t700">Horas trabajadas esta semana <span class="secundario">700</span></p>
+      <p class="d-t600">Registros de hoy · Sucursal Centro <span class="secundario">600</span></p>
+      <p class="d-t500">Escanea el QR de la entrada <span class="secundario">500</span></p>
+      <p class="d-t400">Texto normal para descripciones y ayudas en pantalla. Ñandú, acción, ¿cuántas horas? ¡Listo! <span class="secundario">400</span></p>
+    </div>
+  </section>
+
+  <!-- 3. Botones -->
+  <section class="d-seccion">
+    <h2>Botones</h2>
+    <p class="secundario">Mínimo 44 px de alto, radio 12 px. Pasa el mouse, usa Tab para ver el contorno azul de foco y mantén presionado para el estado activo.</p>
+    <div class="tarjeta d-fila">
+      <button class="boton boton--primario" type="button"><svg class="ic ic-sm" aria-hidden="true"><use href="icons/iconos.svg#descargar"/></svg>Exportar reporte STPS</button>
+      <button class="boton" type="button"><svg class="ic ic-sm" aria-hidden="true"><use href="icons/iconos.svg#agregar-persona"/></svg>Agregar trabajador</button>
+      <button class="boton boton--fantasma" type="button">Ver todos</button>
+      <button class="boton boton--peligro" type="button">Dar de baja</button>
+      <button class="boton boton--primario" type="button" disabled>Deshabilitado</button>
+      <button class="boton boton--primario" type="button" id="d-btn-cargar">Guardar (prueba cargando)</button>
+    </div>
+  </section>
+
+  <!-- 4. Píldoras -->
+  <section class="d-seccion">
+    <h2>Píldoras de estado</h2>
+    <div class="tarjeta d-fila">
+      <span class="pildora pildora--verde">A tiempo</span>
+      <span class="pildora pildora--ambar">Retardo</span>
+      <span class="pildora pildora--rojo">Sin registro</span>
+      <span class="pildora pildora--azul">Por sincronizar</span>
+      <span class="pildora pildora--violeta">Alerta de jornada</span>
+      <span class="pildora pildora--turquesa">Activo</span>
+      <span class="pildora pildora--blanca pildora--sin-punto">08:00 – 17:00</span>
+    </div>
+  </section>
+
+  <!-- 5. Íconos y avatares -->
+  <section class="d-seccion d-dos">
+    <div>
+      <h2>Íconos en cuadro pastel (46 px)</h2>
+      <div class="tarjeta d-fila">
+        <span class="cuadro cuadro--verde"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#presentes"/></svg></span>
+        <span class="cuadro cuadro--rojo"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#ausencias"/></svg></span>
+        <span class="cuadro cuadro--ambar"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#retardos"/></svg></span>
+        <span class="cuadro cuadro--turquesa"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#trabajadores"/></svg></span>
+        <span class="cuadro cuadro--azul"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#sincronizar"/></svg></span>
+        <span class="cuadro cuadro--violeta"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#alerta"/></svg></span>
+      </div>
+      <div class="tarjeta d-iconos" id="d-catalogo" aria-label="Catálogo de íconos"></div>
+    </div>
+    <div>
+      <h2>Avatares de iniciales</h2>
+      <div class="tarjeta d-fila">
+        <span class="avatar">JP</span>
+        <span class="avatar avatar--azul">MR</span>
+        <span class="avatar avatar--verde">LG</span>
+        <span class="avatar avatar--violeta">AC</span>
+        <span class="avatar avatar--ambar">SO</span>
+        <span class="avatar avatar--rojo">FT</span>
+        <span class="avatar avatar--lg">JP</span>
+      </div>
+      <h2 class="d-sub">Avisos</h2>
+      <div class="d-columna">
+        <div class="aviso aviso--azul"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#nube"/></svg><div class="aviso__texto">Todo sincronizado</div></div>
+        <div class="aviso aviso--ambar"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#alerta"/></svg><div class="aviso__texto">Llevas 44 de 46 h esta semana<small>Te quedan 2 h ordinarias.</small></div></div>
+        <div class="aviso aviso--verde"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#check"/></svg><div class="aviso__texto">Reporte STPS generado</div></div>
+        <div class="aviso aviso--rojo"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#ausencias"/></svg><div class="aviso__texto">3 trabajadores sin registro de entrada</div></div>
+        <div class="aviso aviso--violeta"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#reloj"/></svg><div class="aviso__texto">Jornada mayor a 8 h sin salida registrada</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Pantalla del patrón -->
+  <section class="d-seccion">
+    <h2>Pantalla del patrón (escritorio; en celular el menú se apila)</h2>
+    <div class="d-marco">
+      <div class="shell-patron d-shell">
+        <aside class="menu-lateral">
+          <div class="logo">
+            <span class="logo__marca"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#reloj"/></svg></span>
+            <span><span class="logo__nombre">Horario Laboral</span><br><span class="logo__por">por Diagonal Catorce</span></span>
+          </div>
+          <nav aria-label="Menú de ejemplo">
+            <ul>
+              <li><a class="menu-lateral__item" href="#" aria-current="page"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#tablero"/></svg>Tablero</a></li>
+              <li><a class="menu-lateral__item" href="#"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#registros"/></svg>Registros</a></li>
+              <li><a class="menu-lateral__item" href="#"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#trabajadores"/></svg>Trabajadores</a></li>
+              <li><a class="menu-lateral__item" href="#"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#horarios"/></svg>Horarios</a></li>
+              <li><a class="menu-lateral__item" href="#"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#reporte"/></svg>Reportes STPS</a></li>
+              <li><a class="menu-lateral__item" href="#"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#convenio"/></svg>Convenios</a></li>
+              <li><a class="menu-lateral__item" href="#"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#config"/></svg>Configuración</a></li>
+            </ul>
+          </nav>
+          <div class="menu-lateral__pie">
+            <div class="tarjeta-lft">
+              <span class="cuadro cuadro--azul cuadro--sm"><svg class="ic ic-sm" aria-hidden="true"><use href="icons/iconos.svg#escudo"/></svg></span>
+              <strong>Cumplimiento LFT</strong>
+              <p>Registro electrónico listo para la STPS (art. 132 fr. XXXIV).</p>
+            </div>
+          </div>
+        </aside>
+
+        <main class="contenido">
+          <header class="encabezado">
+            <div>
+              <p class="secundario">Jueves 8 de octubre · Tortillería La Esperanza · Sucursal Centro</p>
+              <h1 class="titulo-grande">Buenos días, Rubén</h1>
+            </div>
+            <div class="encabezado__acciones">
+              <button class="boton" type="button"><svg class="ic ic-sm" aria-hidden="true"><use href="icons/iconos.svg#agregar-persona"/></svg>Agregar trabajador</button>
+              <button class="boton boton--primario" type="button"><svg class="ic ic-sm" aria-hidden="true"><use href="icons/iconos.svg#descargar"/></svg>Exportar reporte STPS</button>
+            </div>
+          </header>
+
+          <div class="indicadores">
+            <article class="tarjeta tarjeta--hover indicador">
+              <span class="cuadro cuadro--verde"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#presentes"/></svg></span>
+              <span class="indicador__cifra">18</span><span class="indicador__texto">Presentes</span>
+              <span class="indicador__pie"><span class="pildora pildora--verde">90 % del turno</span></span>
+            </article>
+            <article class="tarjeta tarjeta--hover indicador">
+              <span class="cuadro cuadro--rojo"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#ausencias"/></svg></span>
+              <span class="indicador__cifra">2</span><span class="indicador__texto">Ausencias</span>
+              <span class="indicador__pie"><span class="pildora pildora--rojo">Sin registro</span></span>
+            </article>
+            <article class="tarjeta tarjeta--hover indicador">
+              <span class="cuadro cuadro--ambar"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#retardos"/></svg></span>
+              <span class="indicador__cifra">3</span><span class="indicador__texto">Retardos</span>
+              <span class="indicador__pie"><span class="pildora pildora--ambar">+12 min prom.</span></span>
+            </article>
+            <article class="tarjeta tarjeta--hover indicador">
+              <span class="cuadro cuadro--turquesa"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#trabajadores"/></svg></span>
+              <span class="indicador__cifra">20</span><span class="indicador__texto">Trabajadores activos</span>
+              <span class="indicador__pie"><span class="pildora pildora--turquesa">2 sucursales</span></span>
+            </article>
+            <article class="tarjeta tarjeta--hover indicador">
+              <span class="cuadro cuadro--azul"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#sincronizar"/></svg></span>
+              <span class="indicador__cifra">1</span><span class="indicador__texto">Sincronización pendiente</span>
+              <span class="indicador__pie"><span class="pildora pildora--azul">Por sincronizar</span></span>
+            </article>
+            <article class="tarjeta tarjeta--hover indicador">
+              <span class="cuadro cuadro--violeta"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#alerta"/></svg></span>
+              <span class="indicador__cifra">2</span><span class="indicador__texto">Alertas de jornada</span>
+              <span class="indicador__pie"><span class="pildora pildora--violeta">Cerca del tope</span></span>
+            </article>
+          </div>
+
+          <div class="d-graficas">
+            <section class="tarjeta">
+              <div class="tarjeta__cabecera">
+                <h2 class="tarjeta__titulo">Horas trabajadas esta semana</h2>
+                <div class="leyenda"><span><i class="l-ord"></i>Ordinarias</span><span><i class="l-ext"></i>Extra</span></div>
+              </div>
+              <div class="grafica" id="d-grafica" role="img" aria-label="Horas por día: lunes 152, martes 158, miércoles 160, jueves 149, viernes 163, sábado 84">
+                <div class="grafica__col" data-ord="144" data-ext="8"><span class="grafica__total">152 h</span><div class="grafica__barra"><div class="grafica__ord"></div><div class="grafica__ext"></div></div><span class="grafica__dia">Lun</span></div>
+                <div class="grafica__col" data-ord="148" data-ext="10"><span class="grafica__total">158 h</span><div class="grafica__barra"><div class="grafica__ord"></div><div class="grafica__ext"></div></div><span class="grafica__dia">Mar</span></div>
+                <div class="grafica__col" data-ord="150" data-ext="10"><span class="grafica__total">160 h</span><div class="grafica__barra"><div class="grafica__ord"></div><div class="grafica__ext"></div></div><span class="grafica__dia">Mié</span></div>
+                <div class="grafica__col" data-ord="143" data-ext="6"><span class="grafica__total">149 h</span><div class="grafica__barra"><div class="grafica__ord"></div><div class="grafica__ext"></div></div><span class="grafica__dia">Jue</span></div>
+                <div class="grafica__col" data-ord="150" data-ext="13"><span class="grafica__total">163 h</span><div class="grafica__barra"><div class="grafica__ord"></div><div class="grafica__ext"></div></div><span class="grafica__dia">Vie</span></div>
+                <div class="grafica__col" data-ord="80" data-ext="4"><span class="grafica__total">84 h</span><div class="grafica__barra"><div class="grafica__ord"></div><div class="grafica__ext"></div></div><span class="grafica__dia">Sáb</span></div>
+              </div>
+            </section>
+
+            <section class="tarjeta">
+              <div class="tarjeta__cabecera">
+                <h2 class="tarjeta__titulo">Tope semanal</h2>
+                <span class="pildora pildora--blanca pildora--sin-punto">2027: 46 h + 9 h extra</span>
+              </div>
+              <div class="d-columna" id="d-topes">
+                <div class="progreso progreso--violeta" data-h="53"><div class="progreso__fila"><span>Juan Pérez</span><span>53 / 55 h</span></div><div class="progreso__pista"><div class="progreso__valor"></div></div></div>
+                <div class="progreso progreso--ambar" data-h="47"><div class="progreso__fila"><span>María Ruiz</span><span>47 / 55 h</span></div><div class="progreso__pista"><div class="progreso__valor"></div></div></div>
+                <div class="progreso" data-h="38"><div class="progreso__fila"><span>Luis García</span><span>38 / 55 h</span></div><div class="progreso__pista"><div class="progreso__valor"></div></div></div>
+                <div class="progreso" data-h="32"><div class="progreso__fila"><span>Ana Castro</span><span>32 / 55 h</span></div><div class="progreso__pista"><div class="progreso__valor"></div></div></div>
+              </div>
+            </section>
+          </div>
+
+          <section class="tarjeta">
+            <div class="tarjeta__cabecera">
+              <h2 class="tarjeta__titulo">Registros de hoy</h2>
+              <div class="filtros" id="d-filtros" role="group" aria-label="Filtrar registros">
+                <button class="filtro" type="button" aria-pressed="true" data-f="todos">Todos</button>
+                <button class="filtro" type="button" aria-pressed="false" data-f="retardo">Retardos</button>
+                <button class="filtro" type="button" aria-pressed="false" data-f="ausencia">Ausencias</button>
+              </div>
+            </div>
+            <div class="tabla-scroll">
+              <table class="tabla" id="d-tabla">
+                <thead><tr><th>Trabajador</th><th>Entrada</th><th>Comida</th><th>Salida</th><th>Verificación</th><th>Estado</th></tr></thead>
+                <tbody>
+                  <tr data-e="ok"><td><span class="persona"><span class="avatar">JP</span>Juan Pérez</span></td><td>08:03</td><td>13:00 – 13:58</td><td>—</td><td><span class="verif" title="QR · GPS · selfie"><svg class="ic ic-sm" aria-label="QR"><use href="icons/iconos.svg#qr"/></svg><svg class="ic ic-sm" aria-label="GPS"><use href="icons/iconos.svg#ubicacion"/></svg><svg class="ic ic-sm" aria-label="Selfie"><use href="icons/iconos.svg#camara"/></svg></span></td><td><span class="pildora pildora--verde">A tiempo</span></td></tr>
+                  <tr data-e="retardo"><td><span class="persona"><span class="avatar avatar--azul">MR</span>María Ruiz</span></td><td>08:17</td><td>—</td><td>—</td><td><span class="verif"><svg class="ic ic-sm" aria-label="QR"><use href="icons/iconos.svg#qr"/></svg><svg class="ic ic-sm" aria-label="GPS"><use href="icons/iconos.svg#ubicacion"/></svg><svg class="ic ic-sm" aria-label="Selfie"><use href="icons/iconos.svg#camara"/></svg></span></td><td><span class="pildora pildora--ambar">Retardo</span></td></tr>
+                  <tr data-e="ausencia"><td><span class="persona"><span class="avatar avatar--rojo">FT</span>Fernanda Torres</span></td><td>—</td><td>—</td><td>—</td><td class="secundario">—</td><td><span class="pildora pildora--rojo">Sin registro</span></td></tr>
+                  <tr data-e="ok"><td><span class="persona"><span class="avatar avatar--verde">LG</span>Luis García</span></td><td>07:58</td><td>—</td><td>—</td><td><span class="verif"><svg class="ic ic-sm" aria-label="QR"><use href="icons/iconos.svg#qr"/></svg><svg class="ic ic-sm" aria-label="GPS"><use href="icons/iconos.svg#ubicacion"/></svg><svg class="ic ic-sm" aria-label="Selfie"><use href="icons/iconos.svg#camara"/></svg></span></td><td><span class="pildora pildora--azul">Por sincronizar</span></td></tr>
+                  <tr data-e="ok"><td><span class="persona"><span class="avatar avatar--violeta">AC</span>Ana Castro</span></td><td>06:00</td><td>11:00 – 11:30</td><td>—</td><td><span class="verif"><svg class="ic ic-sm" aria-label="QR"><use href="icons/iconos.svg#qr"/></svg><svg class="ic ic-sm" aria-label="GPS"><use href="icons/iconos.svg#ubicacion"/></svg><svg class="ic ic-sm" aria-label="Selfie"><use href="icons/iconos.svg#camara"/></svg></span></td><td><span class="pildora pildora--violeta">Alerta de jornada</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Pantalla del trabajador -->
+  <section class="d-seccion">
+    <h2>Pantalla del trabajador (celular)</h2>
+    <div class="d-celular">
+      <div class="d-celular__pantalla">
+        <header class="encabezado-trab">
+          <div>
+            <p class="secundario">Tortillería La Esperanza · Sucursal Centro</p>
+            <h1 class="titulo-grande">Hola, Juan</h1>
+          </div>
+          <span class="avatar avatar--lg" aria-hidden="true">JP</span>
+        </header>
+        <div class="contenido-trab">
+          <section class="jornada">
+            <span class="d-t600">Tu jornada de hoy</span>
+            <span class="jornada__hora" id="d-hora">12:58</span>
+            <div class="jornada__pildoras">
+              <span class="pildora pildora--blanca pildora--sin-punto"><svg class="ic ic-sm" aria-hidden="true"><use href="icons/iconos.svg#reloj"/></svg>08:00 – 17:00</span>
+              <span class="pildora pildora--blanca pildora--sin-punto"><svg class="ic ic-sm" aria-hidden="true"><use href="icons/iconos.svg#comida"/></svg>Comida 13:00 – 14:00</span>
+            </div>
+            <span class="jornada__estado"><svg class="ic ic-sm" aria-hidden="true"><use href="icons/iconos.svg#check"/></svg>Entrada registrada a las 8:03</span>
+          </section>
+
+          <div id="d-checar-zona">
+            <button class="boton-checar" type="button" id="d-checar">
+              <span class="boton-checar__icono"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#qr"/></svg></span>
+              <span><span class="boton-checar__titulo">Checar salida a comida</span><span class="boton-checar__sub">Escanea el QR de la entrada</span></span>
+            </button>
+            <div class="confirmado" id="d-confirmado" hidden role="status">
+              <span class="confirmado__check"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#check"/></svg></span>
+              <span><span class="confirmado__titulo">¡Registro confirmado!</span><br><span>Salida a comida · 12:58</span></span>
+            </div>
+          </div>
+
+          <div class="pasos">
+            <div class="tarjeta paso"><span class="cuadro cuadro--azul"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#qr"/></svg></span><span class="paso__num">1</span><span class="paso__nombre">QR</span></div>
+            <div class="tarjeta paso"><span class="cuadro cuadro--azul"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#camara"/></svg></span><span class="paso__num">2</span><span class="paso__nombre">Selfie</span></div>
+            <div class="tarjeta paso"><span class="cuadro cuadro--azul"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#ubicacion"/></svg></span><span class="paso__num">3</span><span class="paso__nombre">Ubicación</span></div>
+          </div>
+
+          <div class="aviso aviso--azul"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#nube"/></svg><div class="aviso__texto">Todo sincronizado</div></div>
+          <div class="aviso aviso--ambar"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#alerta"/></svg><div class="aviso__texto">Llevas 44 de 46 h esta semana</div></div>
+
+          <section class="tarjeta">
+            <h2 class="tarjeta__titulo">Tus registros</h2>
+            <ul class="lista">
+              <li class="lista__item"><span class="cuadro cuadro--verde cuadro--sm"><svg class="ic ic-sm" aria-hidden="true"><use href="icons/iconos.svg#entrada"/></svg></span><span class="lista__cuerpo"><span class="lista__titulo">Entrada</span><br><span class="lista__sub">Hoy · 08:03</span></span><span class="pildora pildora--verde">A tiempo</span></li>
+              <li class="lista__item"><span class="cuadro cuadro--ambar cuadro--sm"><svg class="ic ic-sm" aria-hidden="true"><use href="icons/iconos.svg#salir"/></svg></span><span class="lista__cuerpo"><span class="lista__titulo">Salida</span><br><span class="lista__sub">Ayer · 17:02</span></span><span class="pildora pildora--azul">Por sincronizar</span></li>
+              <li class="lista__item"><span class="cuadro cuadro--verde cuadro--sm"><svg class="ic ic-sm" aria-hidden="true"><use href="icons/iconos.svg#entrada"/></svg></span><span class="lista__cuerpo"><span class="lista__titulo">Entrada</span><br><span class="lista__sub">Ayer · 08:16</span></span><span class="pildora pildora--ambar">Retardo</span></li>
+            </ul>
+          </section>
+        </div>
+        <nav class="menu-inferior menu-inferior--estatico d-menu-inf" aria-label="Menú de ejemplo">
+          <ul>
+            <li><a class="menu-inferior__item" href="#" aria-current="page"><span class="menu-inferior__pastilla"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#inicio"/></svg></span>Inicio</a></li>
+            <li><a class="menu-inferior__item" href="#"><span class="menu-inferior__pastilla"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#historial"/></svg></span>Historial</a></li>
+            <li><a class="menu-inferior__item" href="#"><span class="menu-inferior__pastilla"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#mi-horario"/></svg></span>Mi horario</a></li>
+            <li><a class="menu-inferior__item" href="#"><span class="menu-inferior__pastilla"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#perfil"/></svg></span>Perfil</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+    <p class="secundario d-centro">Toca el botón turquesa para ver la confirmación. Vuelve a tocar la tarjeta verde para reiniciar.</p>
+  </section>
+
+</div>
+</body>
+</html>

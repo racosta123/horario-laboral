@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; manifest-src 'self'; worker-src 'self'; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://horario-laboral-proxy.acosta4770.workers.dev; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#FFFFFF">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Horario">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="description" content="Registro electrónico de entrada y salida para cumplir la LFT. Por Diagonal Catorce.">
+  <title>Horario Laboral</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/favicon-32.png" type="image/png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="preload" href="fonts/figtree-800.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/componentes.css">
+  <link rel="stylesheet" href="css/app.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <noscript><p class="aviso aviso--ambar">Horario Laboral necesita JavaScript activado.</p></noscript>
+
+  <!-- Pantalla de carga -->
+  <main id="cargando" class="pantalla-centro" aria-busy="true">
+    <div class="logo">
+      <span class="logo__marca"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#reloj"/></svg></span>
+      <span><span class="logo__nombre">Horario Laboral</span><br><span class="logo__por">por Diagonal Catorce</span></span>
+    </div>
+  </main>
+
+  <!-- Inicio de sesión -->
+  <main id="login" class="pantalla-centro" hidden>
+    <section class="tarjeta login">
+      <div class="logo">
+        <span class="logo__marca"><svg class="ic" aria-hidden="true"><use href="icons/iconos.svg#reloj"/></svg></span>
+        <span><span class="logo__nombre">Horario Laboral</span><br><span class="logo__por">por Diagonal Catorce</span></span>
+      </div>
+      <div>
+        <h1>Bienvenido</h1>
+        <p class="secundario">Entra con el correo y la contraseña que te dio tu empresa.</p>
+      </div>
+      <form id="form-login" class="formulario" novalidate>
+        <div class="campo">
+          <label for="email">Correo</label>
+          <input id="email" name="email" type="email" autocomplete="username" inputmode="email" required maxlength="254">
+        </div>
+        <div class="campo">
+          <label for="password">Contraseña</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" required maxlength="128">
+        </div>
+        <div id="login-error" class="aviso aviso--rojo" role="alert" hidden></div>
+        <div id="login-info" class="aviso aviso--azul" role="status" hidden></div>
+        <button id="btn-entrar" class="boton boton--primario boton--grande boton--bloque" type="submit">Entrar</button>
+        <button id="btn-olvide" class="boton boton--fantasma boton--bloque" type="button">Olvidé mi contraseña</button>
+      </form>
+      <p class="login__pie secundario"><svg class="ic ic-sm" aria-hidden="true"><use href="icons/iconos.svg#escudo"/></svg> Registro electrónico conforme a la LFT, art. 132 fr. XXXIV.</p>
+    </section>
+  </main>
+
+  <!-- Inicio según el rol (se arma en js/app.js) -->
+  <div id="app" hidden></div>
+</body>
+</html>

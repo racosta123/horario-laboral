@@ -1,0 +1,7 @@
+#!/bin/sh
+# Antes de cada commit: escaneo de secretos de lo que está por entrar. Si encuentra algo, el commit se cancela.
+# Se activa con: npm run hooks   (git config core.hooksPath tools/hooks)
+node tools/scan-secrets.mjs --staged || {
+  echo "Commit cancelado: se detectaron posibles secretos. Revisa los hallazgos de arriba." >&2
+  exit 1
+}

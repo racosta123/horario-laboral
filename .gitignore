@@ -1,0 +1,32 @@
+# Dependencias y herramientas locales
+node_modules/
+.tools/
+
+# Cloudflare / Wrangler
+.wrangler/
+.dev.vars
+.dev.vars.*
+worker/.dev.vars*
+
+# Secretos y llaves (NUNCA al repo)
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+*service-account*.json
+*serviceAccount*.json
+*-firebase-adminsdk-*.json
+credenciales*/
+secrets/
+
+# Logs del emulador y de depuración
+*-debug.log
+*.log
+.firebase/
+
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini

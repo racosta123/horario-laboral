@@ -1,0 +1,49 @@
+/* Solo para la página de muestra /diseno.html */
+.d-pagina { max-width: 1280px; margin: 0 auto; padding: var(--e-8) var(--e-4) var(--e-10); display: flex; flex-direction: column; gap: var(--e-10); }
+.d-cabecera { display: flex; flex-direction: column; gap: var(--e-3); }
+.d-seccion { display: flex; flex-direction: column; gap: var(--e-4); }
+.d-seccion > h2, .d-sub { font-size: var(--t-xl); }
+.d-sub { margin-top: var(--e-6); margin-bottom: var(--e-4); }
+.d-fila { display: flex; flex-wrap: wrap; gap: var(--e-3); align-items: center; }
+.d-columna { display: flex; flex-direction: column; gap: var(--e-3); }
+.d-dos { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--e-6); }
+.d-dos h2 { font-size: var(--t-xl); margin-bottom: var(--e-4); }
+.d-centro { text-align: center; }
+
+.d-colores { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--e-4); }
+.d-color { display: grid; grid-template-columns: auto 1fr; gap: var(--e-2) var(--e-3); align-items: center; background: var(--blanco); border: 1px solid var(--borde); border-radius: var(--r-tarjeta); padding: var(--e-4); }
+.d-color b { font-weight: 800; }
+.d-color code, .d-iconos code { font-size: var(--t-xs); color: var(--texto-2); font-family: ui-monospace, Consolas, monospace; }
+.d-color > .d-muestra:first-child { grid-row: span 1; }
+.d-muestra { width: 44px; height: 44px; border-radius: 12px; border: 1px solid rgba(24, 49, 83, 0.08); }
+.d-muestra--chica { width: 28px; height: 28px; border-radius: 8px; justify-self: center; }
+.m-turquesa { background: var(--turquesa); } .m-turquesa-claro { background: var(--turquesa-claro); } .m-turquesa-oscuro { background: var(--turquesa-oscuro); }
+.m-azul { background: var(--azul); } .m-azul-claro { background: var(--azul-claro); } .m-azul-texto { background: var(--azul-texto); }
+.m-verde { background: var(--verde); } .m-verde-claro { background: var(--verde-claro); } .m-verde-texto { background: var(--verde-texto); }
+.m-violeta { background: var(--violeta); } .m-violeta-claro { background: var(--violeta-claro); } .m-violeta-texto { background: var(--violeta-texto); }
+.m-ambar { background: var(--ambar); } .m-ambar-claro { background: var(--ambar-claro); } .m-ambar-texto { background: var(--ambar-texto); }
+.m-rojo { background: var(--rojo); } .m-rojo-claro { background: var(--rojo-claro); } .m-rojo-texto { background: var(--rojo-texto); }
+.m-texto { background: var(--texto); } .m-texto-2 { background: var(--texto-2); }
+.m-fondo { background: var(--fondo); } .m-borde { background: var(--borde); } .m-linea { background: var(--linea); }
+
+.d-tipos { display: flex; flex-direction: column; gap: var(--e-3); }
+.d-tipos .secundario { font-size: var(--t-xs); font-weight: 500; letter-spacing: 0; }
+.d-t800 { font-size: var(--t-3xl); font-weight: 800; letter-spacing: var(--tracking-titulo); line-height: 1.1; }
+.d-t700 { font-size: var(--t-xl); font-weight: 700; }
+.d-t600 { font-weight: 600; }
+.d-t500 { font-weight: 500; }
+.d-t400 { font-weight: 400; }
+
+.d-iconos { margin-top: var(--e-4); display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: var(--e-3); }
+.d-icono { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: var(--e-2); color: var(--turquesa); }
+
+/* Marco de escritorio y celular para las pantallas de muestra */
+.d-marco { border: 1px solid var(--borde); border-radius: 20px; overflow: hidden; background: var(--fondo); box-shadow: var(--sombra-hover); }
+.d-shell { min-height: 0; }
+.d-shell .menu-lateral { position: static; height: auto; }
+.d-graficas { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: var(--e-4); }
+@media (max-width: 1100px) { .d-graficas { grid-template-columns: minmax(0, 1fr); } }
+
+.d-celular { width: min(400px, 100%); margin: 0 auto; border: 10px solid #E8EEF5; border-radius: 40px; background: var(--fondo); overflow: hidden; box-shadow: var(--sombra-hover); }
+.d-celular__pantalla { display: flex; flex-direction: column; gap: var(--e-4); padding-bottom: var(--e-3); }
+.d-menu-inf { margin: 0 var(--e-3); }

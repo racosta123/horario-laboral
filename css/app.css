@@ -1,0 +1,33 @@
+/* Horario Laboral — estructura de pantallas (usa tokens.css y componentes.css). */
+
+.pantalla-centro { min-height: 100vh; min-height: 100dvh; display: grid; place-items: center; padding: var(--e-4); }
+
+/* Inicio de sesión */
+.login { width: min(420px, 100%); display: flex; flex-direction: column; gap: var(--e-6); padding: var(--e-8) var(--e-6); }
+.login h1 { font-size: var(--t-2xl); margin-bottom: var(--e-1); }
+.login__pie { display: flex; align-items: center; gap: var(--e-2); font-size: var(--t-xs); }
+.formulario { display: flex; flex-direction: column; gap: var(--e-4); }
+.formulario--2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--e-4); }
+.formulario__fin { grid-column: 1 / -1; display: flex; justify-content: flex-end; }
+[role="status"]:not(:empty) { margin-top: var(--e-4); }
+
+/* Patrón (escritorio): menú lateral + contenido. En celular el menú se apila arriba. */
+.shell-patron { display: grid; grid-template-columns: var(--ancho-menu) minmax(0, 1fr); min-height: 100vh; min-height: 100dvh; }
+.shell-patron .menu-lateral { position: sticky; top: 0; height: 100vh; height: 100dvh; }
+.contenido { padding: var(--e-8); display: flex; flex-direction: column; gap: var(--e-6); min-width: 0; }
+.contenido > * { min-width: 0; }
+.encabezado { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--e-4); flex-wrap: wrap; }
+.encabezado__acciones { display: flex; gap: var(--e-3); flex-wrap: wrap; }
+.titulo-grande { font-size: var(--t-3xl); }
+@media (max-width: 860px) {
+  .shell-patron { grid-template-columns: minmax(0, 1fr); }
+  .shell-patron .menu-lateral { position: static; height: auto; }
+  .contenido { padding: var(--e-5) var(--e-4); }
+  .titulo-grande { font-size: var(--t-2xl); }
+}
+
+/* Trabajador (celular) */
+.shell-trabajador { max-width: 560px; margin: 0 auto; padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
+.encabezado-trab { display: flex; align-items: center; justify-content: space-between; gap: var(--e-3); padding: var(--e-6) var(--e-4) var(--e-4); }
+.contenido-trab { padding: 0 var(--e-4); display: flex; flex-direction: column; gap: var(--e-4); }
+.fila-fin { display: flex; justify-content: flex-end; }
