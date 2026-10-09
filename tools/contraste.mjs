@@ -12,8 +12,8 @@ const PARES = [
   ["Botón hover: blanco / #096B65", "#FFFFFF", "#096B65", 4.5],
   ["Menú activo: #0B7E77 / #EAF8F7", "#0B7E77", "#EAF8F7", 4.5],
   ["Menú inferior activo: #0B7E77 / blanco", "#0B7E77", "#FFFFFF", 4.5],
-  // Mismo par de la maqueta en otros componentes (4.46:1). Pendiente de aprobación: no se cambia sin autorización.
-  ["Píldora turquesa / filtro activo / avatar: #0B7F78 / #EAF8F7", "#0B7F78", "#EAF8F7", 4.5, "aviso"],
+  ["Píldora turquesa / filtro activo / avatar / botón fantasma (hover): #0B7E77 / #EAF8F7", "#0B7E77", "#EAF8F7", 4.5],
+  ["Botón fantasma: #0B7E77 / blanco", "#0B7E77", "#FFFFFF", 4.5],
   ["Píldora verde", "#15803D", "#ECFDF3", 4.5],
   ["Píldora ámbar", "#B45309", "#FFFAEB", 4.5],
   ["Píldora roja", "#B91C1C", "#FEF2F2", 4.5],

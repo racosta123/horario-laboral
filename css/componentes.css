@@ -78,7 +78,7 @@ img, svg { display: block; }
 .boton--primario:hover { background: var(--accion-hover); border-color: var(--accion-hover); }
 .boton--peligro { --b-fondo: var(--rojo-claro); --b-texto: var(--rojo-texto); --b-borde: #FBD5D5; }
 .boton--peligro:hover { background: #FDE3E3; border-color: #F8C1C1; }
-.boton--fantasma { --b-fondo: transparent; --b-borde: transparent; --b-texto: var(--turquesa-oscuro); }
+.boton--fantasma { --b-fondo: transparent; --b-borde: transparent; --b-texto: var(--turquesa-activo); }
 .boton--fantasma:hover { background: var(--turquesa-claro); border-color: transparent; }
 .boton--bloque { width: 100%; }
 .boton--grande { min-height: 52px; font-size: var(--t-md); }
@@ -137,7 +137,7 @@ img, svg { display: block; }
 .pildora--rojo { background: var(--rojo-claro); color: var(--rojo-texto); }
 .pildora--azul { background: var(--azul-claro); color: var(--azul-texto); }
 .pildora--violeta { background: var(--violeta-claro); color: var(--violeta-texto); }
-.pildora--turquesa { background: var(--turquesa-claro); color: var(--turquesa-oscuro); }
+.pildora--turquesa { background: var(--turquesa-claro); color: var(--turquesa-activo); }
 .pildora--blanca { background: var(--blanco); color: var(--texto); border: 1px solid var(--borde); }
 
 /* Filtros en píldora */
@@ -148,7 +148,7 @@ img, svg { display: block; }
   background: var(--blanco); border: 1px solid var(--borde); cursor: pointer;
 }
 .filtro:hover { background: var(--fondo); }
-.filtro[aria-pressed="true"] { background: var(--turquesa-claro); border-color: #BFE9E5; color: var(--turquesa-oscuro); }
+.filtro[aria-pressed="true"] { background: var(--turquesa-claro); border-color: #BFE9E5; color: var(--turquesa-activo); }
 
 /* ---------- Indicador (KPI) ---------- */
 .indicadores { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--e-4); }
@@ -164,7 +164,7 @@ img, svg { display: block; }
   width: 40px; height: 40px; border-radius: 50%; flex: none;
   display: inline-grid; place-items: center;
   font-weight: 800; font-size: var(--t-sm); letter-spacing: 0;
-  background: var(--turquesa-claro); color: var(--turquesa-oscuro);
+  background: var(--turquesa-claro); color: var(--turquesa-activo);
 }
 .avatar--lg { width: 48px; height: 48px; font-size: var(--t-md); }
 .avatar--azul { background: var(--azul-claro); color: var(--azul-texto); }
