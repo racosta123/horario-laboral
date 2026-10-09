@@ -1,10 +1,11 @@
 // Service worker de Horario Laboral: guarda la app (mismo origen) para abrir sin conexión.
 // NUNCA guarda respuestas del Worker ni de Google (datos personales y tokens).
-const VERSION = "hl-v0.0.3";
+const VERSION = "hl-v0.1.0";
 const APP = [
   "./", "./index.html", "./manifest.webmanifest",
   "./css/tokens.css", "./css/componentes.css", "./css/app.css",
   "./js/app.js", "./js/auth.js", "./js/api.js", "./js/ui.js", "./js/instalar.js", "./js/config.js", "./js/vendor/firebase.js",
+  "./js/admin.js", "./js/datos.js", "./js/camara.js", "./js/credencial.js", "./js/vendor/qr.js",
   "./icons/iconos.svg", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/maskable-512.png", "./icons/favicon-32.png",
   "./fonts/figtree-400.woff2", "./fonts/figtree-500.woff2", "./fonts/figtree-600.woff2", "./fonts/figtree-700.woff2", "./fonts/figtree-800.woff2",
 ];

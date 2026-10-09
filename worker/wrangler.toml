@@ -14,6 +14,7 @@ ALLOWED_ORIGINS = "https://racosta123.github.io"
 # Secrets (NUNCA aquí; se cargan con `wrangler secret put <NOMBRE>`):
 #   SERVICE_ACCOUNT_JSON  JSON de la cuenta de servicio de Firebase (Admin)
 #   SETUP_TOKEN           token aleatorio (>= 32 caracteres) para dar de alta al superadmin UNA vez; borrar después
+#   PIN_PEPPER            secreto aleatorio (>= 32 bytes) para el hash de los PIN de empleados. Nunca va a Firestore.
 
 # Evidencias (selfies): bucket R2 PRIVADO. Sin r2.dev ni dominio público: solo este Worker lee y escribe.
 [[r2_buckets]]

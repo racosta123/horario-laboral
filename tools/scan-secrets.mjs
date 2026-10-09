@@ -16,7 +16,7 @@ const PATRONES = [
   [/\b1\/\/0[0-9A-Za-z_-]{40,}/, "refresh token de Google"],
   [/eyJ[A-Za-z0-9_-]{20,}\.eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}/, "JWT"],
   [/\b(CLOUDFLARE|CF)_API_(TOKEN|KEY)\s*[=:]\s*["']?[A-Za-z0-9_-]{20,}/, "token de Cloudflare"],
-  [/\b(SETUP_TOKEN|SERVICE_ACCOUNT_JSON)\s*[=:]\s*["']?[A-Za-z0-9+/=_{-]{16,}/, "secret del Worker en claro"],
+  [/\b(SETUP_TOKEN|SERVICE_ACCOUNT_JSON|PIN_PEPPER)\s*[=:]\s*["']?[A-Za-z0-9+/=_{-]{16,}/, "secret del Worker en claro"],
   [/\bsk-(ant-|live_|proj-)?[A-Za-z0-9_-]{20,}/, "API key (sk-…)"],
   [/\b(sk|rk)_live_[A-Za-z0-9]{20,}/, "llave de Stripe en vivo"],
   [/xox[abposr]-[A-Za-z0-9-]{10,}/, "token de Slack"],

@@ -1,11 +1,13 @@
-// Sesión con Firebase Auth (email/contraseña). El SDK vive dentro del repo (js/vendor/firebase.js).
+// Sesión con Firebase Auth. El SDK vive dentro del repo (js/vendor/firebase.js).
+// - Administradores: correo y contraseña.
+// - Empleados: clave de empresa + número + PIN → el Worker valida y entrega un token personalizado.
 import {
   initializeApp, initializeAuth, indexedDBLocalPersistence, browserLocalPersistence,
-  signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut,
+  signInWithEmailAndPassword, signInWithCustomToken, sendPasswordResetEmail, onAuthStateChanged, signOut,
 } from "./vendor/firebase.js";
 import { FIREBASE_CONFIG } from "./config.js";
 
-const app = initializeApp(FIREBASE_CONFIG);
+export const app = initializeApp(FIREBASE_CONFIG);
 // Sin popupRedirectResolver: no se cargan scripts ni iframes externos.
 export const auth = initializeAuth(app, { persistence: [indexedDBLocalPersistence, browserLocalPersistence] });
 auth.languageCode = "es";
@@ -13,6 +15,7 @@ auth.languageCode = "es";
 export const ROLES = ["superadmin", "admin_empresa", "supervisor", "trabajador"];
 
 export const entrar = (email, password) => signInWithEmailAndPassword(auth, email.trim(), password);
+export const entrarConToken = (token) => signInWithCustomToken(auth, token);
 export const salir = () => signOut(auth);
 export const restablecer = (email) => sendPasswordResetEmail(auth, email.trim());
 export const alCambiarSesion = (fn) => onAuthStateChanged(auth, fn);

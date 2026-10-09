@@ -9,7 +9,7 @@
     "build:iconos": "node tools/generar-iconos.mjs",
     "test": "npm run test:worker && npm run test:rules",
     "test:worker": "node --test worker/test/*.test.js",
-    "test:rules": "node tools/con-java.mjs firebase emulators:exec --only firestore --project demo-horario-laboral \"node --test tests/*.test.js\"",
+    "test:rules": "node tools/con-java.mjs firebase emulators:exec --only firestore --project demo-horario-laboral \"node --test --test-concurrency=1 tests/*.test.js\"",
     "secretos": "node tools/scan-secrets.mjs",
     "audit": "npm audit --audit-level=low && node tools/scan-secrets.mjs",
     "serve": "node tools/serve.mjs",
@@ -17,13 +17,16 @@
     "contraste": "node tools/contraste.mjs",
     "auditar:pwa": "node tools/auditar-pwa.mjs",
     "verificar": "npm run test && npm run contraste && npm run audit",
-    "verify:apikey": "node tools/verify-apikey.mjs"
+    "verify:apikey": "node tools/verify-apikey.mjs",
+    "e2e": "node tools/e2e-local.mjs",
+    "mutacion": "node tools/mutacion.mjs worker && node tools/mutacion.mjs reglas"
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "6.0.0",
     "@fontsource/figtree": "5.3.0",
     "esbuild": "0.28.2",
-    "firebase": "13.0.0"
+    "firebase": "13.0.0",
+    "qrcode-generator": "2.0.4"
   },
   "overrides": {
     "@grpc/grpc-js": "^1.14.5"

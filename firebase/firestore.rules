@@ -56,9 +56,10 @@ service cloud.firestore {
         allow write: if false;
       }
 
-      // El id del documento del trabajador es su uid de Firebase Auth.
-      match /trabajadores/{trabajadorUid} {
-        allow read: if staffDe(empresaId) || (trabajadorDe(empresaId) && trabajadorUid == request.auth.uid);
+      // Cada trabajador tiene su propio id; el campo uid enlaza su sesión (si la tiene: los de quiosco no).
+      // El documento no lleva secretos: el hash del PIN y el del gafete viven en privado/ (solo del Worker).
+      match /trabajadores/{trabajadorId} {
+        allow read: if staffDe(empresaId) || (trabajadorDe(empresaId) && esMio());
         allow write: if false;
       }
 
@@ -84,7 +85,19 @@ service cloud.firestore {
         allow read: if adminDe(empresaId);
         allow create, update, delete: if false;
       }
+
+      // Conteo mensual para el cobro (máximo de empleados y sitios activos). Lo escribe solo el Worker.
+      // El superadmin lo ve para cobrar: son números, no datos personales.
+      match /consumo/{mes} {
+        allow read: if adminDe(empresaId) || superadmin();
+        allow write: if false;
+      }
+
+      // privado/ (hash del PIN y del gafete) y numeros/ (índice de números de empleado): SOLO el Worker.
+      // No se declaran: caen en la regla final que niega todo.
     }
+
+    // gafetes/{hash} y claves/{clave}: índices globales SOLO del Worker (caen en la regla final que niega todo).
 
     // Cualquier otra ruta (incluidas subcolecciones nuevas no previstas): negada.
     match /{document=**} {

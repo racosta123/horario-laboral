@@ -91,32 +91,86 @@ export function dec(f) {
 
 const docsBase = (env) => `projects/${env.FIREBASE_PROJECT_ID}/databases/(default)/documents`;
 
-export async function getDocument(env, path) {
-  const res = await google(env, `${URLS.firestore}/${docsBase(env)}/${path}`, null, "GET");
+// tx: id de transacción (opcional). La lectura dentro de una transacción la bloquea hasta el commit.
+export async function getDocument(env, path, tx) {
+  const q = tx ? `?transaction=${encodeURIComponent(tx)}` : "";
+  const res = await google(env, `${URLS.firestore}/${docsBase(env)}/${path}${q}`, null, "GET");
   if (res.status === 404) return null;
-  if (!res.ok) throw new HttpError(502, "upstream_firestore");
+  if (!res.ok) throw new HttpError(res.status === 409 ? 409 : 502, res.status === 409 ? "conflicto" : "upstream_firestore");
   const j = await res.json();
   return Object.fromEntries(Object.entries(j.fields || {}).map(([k, v]) => [k, dec(v)]));
 }
 
-// writes: [{ path, data, mustNotExist?, serverTimeFields? }] — todo en UNA transacción atómica.
-export async function commit(env, writes) {
+// writes: [{ path, data, merge?, mustExist?, mustNotExist?, serverTimeFields?, incrementos?, maximos?, borrar? }]
+//   merge: actualiza SOLO los campos de data (los demás se conservan).
+//   incrementos / maximos: { campo: n } → se aplican en el servidor de forma atómica.
+//   borrar: elimina el documento.
+// Todo va en UN commit atómico; con tx, además dentro de la transacción.
+export async function commit(env, writes, tx) {
   const body = {
     writes: writes.map((w) => {
-      const out = { update: { name: `${docsBase(env)}/${w.path}`, fields: enc(w.data).mapValue.fields } };
+      if (w.borrar) return { delete: `${docsBase(env)}/${w.path}` };
+      const data = w.data || {};
+      const out = { update: { name: `${docsBase(env)}/${w.path}`, fields: Object.keys(data).length ? enc(data).mapValue.fields : {} } };
+      if (w.merge) out.updateMask = { fieldPaths: Object.keys(data).map((k) => `\`${k}\``) };
       if (w.mustNotExist) out.currentDocument = { exists: false };
-      if (w.serverTimeFields?.length) {
-        out.updateTransforms = w.serverTimeFields.map((f) => ({ fieldPath: f, setToServerValue: "REQUEST_TIME" }));
-      }
+      if (w.mustExist) out.currentDocument = { exists: true };
+      const t = [
+        ...(w.serverTimeFields || []).map((f) => ({ fieldPath: f, setToServerValue: "REQUEST_TIME" })),
+        ...Object.entries(w.incrementos || {}).map(([f, n]) => ({ fieldPath: f, increment: enc(n) })),
+        ...Object.entries(w.maximos || {}).map(([f, n]) => ({ fieldPath: f, maximum: enc(n) })),
+      ];
+      if (t.length) out.updateTransforms = t;
       return out;
     }),
   };
+  if (tx) body.transaction = tx;
   const res = await google(env, `${URLS.firestore}/${docsBase(env)}:commit`, body);
   if (res.ok) return;
   const j = await res.json().catch(() => ({}));
   const st = j?.error?.status;
+  if (st === "ABORTED") throw new HttpError(409, "conflicto");
+  if (st === "NOT_FOUND") throw new HttpError(404, "no_encontrado");
   if (res.status === 409 || st === "ALREADY_EXISTS" || st === "FAILED_PRECONDITION") throw new HttpError(409, "ya_existe");
   throw new HttpError(502, "upstream_firestore");
+}
+
+// Ejecuta fn(tx) dentro de una transacción de Firestore; reintenta si otra petición tocó lo mismo.
+// fn debe leer con getDocument(env, ruta, tx) y devolver { writes, resultado }.
+export async function conTransaccion(env, fn, intentos = 4) {
+  for (let i = 1; ; i++) {
+    const r = await google(env, `${URLS.firestore}/${docsBase(env)}:beginTransaction`, { options: { readWrite: {} } });
+    if (!r.ok) throw new HttpError(502, "upstream_firestore");
+    const tx = (await r.json()).transaction;
+    try {
+      const { writes, resultado } = await fn(tx);
+      await commit(env, writes, tx);
+      return resultado;
+    } catch (e) {
+      if (e instanceof HttpError && e.code === "conflicto" && i < intentos) continue;
+      if (!(e instanceof HttpError && e.code === "conflicto")) {
+        await google(env, `${URLS.firestore}/${docsBase(env)}:rollback`, { transaction: tx }).catch(() => {});
+      }
+      throw e;
+    }
+  }
+}
+
+// Consulta simple por igualdad de un campo dentro de una colección (o subcolección) de un documento padre.
+export async function consultar(env, padre, coleccion, campo, valor, limite = 50) {
+  const url = `${URLS.firestore}/${docsBase(env)}${padre ? `/${padre}` : ""}:runQuery`;
+  const res = await google(env, url, {
+    structuredQuery: {
+      from: [{ collectionId: coleccion }],
+      where: { fieldFilter: { field: { fieldPath: campo }, op: "EQUAL", value: enc(valor) } },
+      limit: limite,
+    },
+  });
+  if (!res.ok) throw new HttpError(502, "upstream_firestore");
+  return (await res.json()).filter((x) => x.document).map((x) => ({
+    id: x.document.name.split("/").pop(),
+    ...Object.fromEntries(Object.entries(x.document.fields || {}).map(([k, v]) => [k, dec(v)])),
+  }));
 }
 
 // ---- Identity Toolkit (administración de cuentas) -------------------------
@@ -155,6 +209,35 @@ export async function enviarCorreoContrasena(env, email) {
     requestType: "PASSWORD_RESET", email, targetProjectId: env.FIREBASE_PROJECT_ID,
   });
   return res.ok;
+}
+
+// Inhabilita o habilita una cuenta. Al inhabilitar también revoca sus sesiones (validSince = ahora).
+// Si la cuenta aún no existe en Auth (empleado que nunca entró) no hay nada que hacer.
+export async function estadoCuenta(env, uid, { activa }) {
+  const body = { localId: uid, disableUser: !activa };
+  if (!activa) body.validSince = String(Math.floor(Date.now() / 1000));
+  const res = await google(env, idtk(env, "accounts:update"), body);
+  if (res.ok) return true;
+  const j = await res.json().catch(() => ({}));
+  if (String(j?.error?.message || "").includes("USER_NOT_FOUND")) return false;
+  throw new HttpError(502, "upstream_identity");
+}
+
+// Token personalizado de Firebase (empleados: entran con número + PIN, sin contraseña ni correo).
+// Se firma con la llave de la cuenta de servicio, en el Worker; no requiere permisos extra de IAM.
+// Los claims viajan en el token y Firebase los incluye en el ID token de esa sesión.
+export async function tokenPersonalizado(env, uid, claims) {
+  const { sa, key } = await cuentaServicio(env);
+  const now = Math.floor(Date.now() / 1000);
+  return signJwt({
+    iss: sa.client_email,
+    sub: sa.client_email,
+    aud: "https://identitytoolkit.googleapis.com/google.identity.identitytoolkit.v1.IdentityToolkit",
+    iat: now,
+    exp: now + 300,
+    uid,
+    claims,
+  }, key);
 }
 
 // ---- Verificación de ID tokens de Firebase --------------------------------

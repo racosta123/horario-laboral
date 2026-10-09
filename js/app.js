@@ -1,7 +1,10 @@
 // Horario Laboral — arranque de la PWA: sesión, rol e inicio según el rol.
-// Fase 0: solo el esqueleto. Los datos de cada pantalla se conectan en fases siguientes.
-import { alCambiarSesion, entrar, mensajeError, restablecer, rolActual, salir } from "./auth.js";
-import { api } from "./api.js";
+//   superadmin → alta de empresas · admin_empresa → panel (admin.js) · supervisor → por ahora aviso
+//   trabajador → su ficha (el checado llega en la Fase 2)
+import { alCambiarSesion, entrar, entrarConToken, mensajeError, restablecer, rolActual, salir } from "./auth.js";
+import { api, apiPublica, imagenPrivada, mensajeErrorApi } from "./api.js";
+import { desmontarAdmin, montarAdmin } from "./admin.js";
+import * as datos from "./datos.js";
 import { iniciarAvisoInstalar } from "./instalar.js";
 import { cargando, el, fechaLarga, icono, iniciales, saludo } from "./ui.js";
 
@@ -9,7 +12,7 @@ const $ = (id) => document.getElementById(id);
 
 function mostrarPantalla(id) {
   for (const p of ["cargando", "login", "app"]) $(p).hidden = p !== id;
-  document.body.classList.toggle("con-menu-inferior", false);
+  document.body.classList.remove("con-menu-inferior", "vista-credencial");
 }
 
 // ---------- Inicio de sesión ----------
@@ -18,6 +21,20 @@ function avisoLogin(tipo, texto) {
   $("login-info").hidden = tipo !== "info";
   if (tipo) $(tipo === "error" ? "login-error" : "login-info").textContent = texto;
 }
+
+// Pestañas: "Soy administrador" (correo) / "Soy trabajador" (clave + número + PIN).
+function elegirModoLogin(modo) {
+  const trabajador = modo === "trabajador";
+  $("tab-admin").setAttribute("aria-selected", String(!trabajador));
+  $("tab-trabajador").setAttribute("aria-selected", String(trabajador));
+  $("form-login").hidden = trabajador;
+  $("form-empleado").hidden = !trabajador;
+  avisoLogin(null);
+  try { localStorage.setItem("hl-login-modo", modo); } catch { /* sin almacenamiento: no pasa nada */ }
+}
+$("tab-admin").addEventListener("click", () => elegirModoLogin("admin"));
+$("tab-trabajador").addEventListener("click", () => elegirModoLogin("trabajador"));
+try { if (localStorage.getItem("hl-login-modo") === "trabajador") elegirModoLogin("trabajador"); } catch { /* idem */ }
 
 $("form-login").addEventListener("submit", async (ev) => {
   ev.preventDefault();
@@ -36,6 +53,26 @@ $("form-login").addEventListener("submit", async (ev) => {
   }
 });
 
+$("form-empleado").addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+  const clave = $("acc-clave").value.trim().toUpperCase(), numero = $("acc-numero").value.trim().toUpperCase(), pin = $("acc-pin").value.trim();
+  if (!clave || !numero || !/^\d{6}$/.test(pin)) return avisoLogin("error", "Escribe la clave de tu empresa, tu número de empleado y tu PIN de 6 dígitos.");
+  const b = $("btn-entrar-empleado");
+  cargando(b, true);
+  avisoLogin(null);
+  try {
+    const { token } = await apiPublica("POST", "/v1/empleado/entrar", { clave, numero, pin });
+    await entrarConToken(token);
+    $("acc-pin").value = "";
+    try { localStorage.setItem("hl-clave", clave); } catch { /* idem */ }
+  } catch (e) {
+    avisoLogin("error", mensajeErrorApi(e, "No se pudo entrar."));
+  } finally {
+    cargando(b, false);
+  }
+});
+try { $("acc-clave").value = localStorage.getItem("hl-clave") || ""; } catch { /* idem */ }
+
 $("btn-olvide").addEventListener("click", async () => {
   const email = $("email").value.trim();
   if (!email) return avisoLogin("error", "Escribe tu correo arriba y vuelve a tocar «Olvidé mi contraseña».");
@@ -48,53 +85,34 @@ $("btn-olvide").addEventListener("click", async () => {
 });
 
 // ---------- Piezas comunes ----------
-const OPCIONES_PATRON = [
-  ["tablero", "Tablero"], ["registros", "Registros"], ["trabajadores", "Trabajadores"], ["horarios", "Horarios"],
-  ["reporte", "Reportes STPS"], ["convenio", "Convenios"], ["config", "Configuración"],
-];
-
 function logo() {
   return el("div", { class: "logo" },
     el("span", { class: "logo__marca" }, icono("reloj")),
     el("span", {}, el("span", { class: "logo__nombre", texto: "Horario Laboral" }), el("br"), el("span", { class: "logo__por", texto: "por Diagonal Catorce" })));
 }
+const botonSalir = () => el("button", { class: "boton", type: "button", onclick: () => salir() }, icono("salir", "ic-sm"), "Salir");
+const aviso = (tipo, texto) => el("div", { class: `aviso aviso--${tipo}` }, icono(tipo === "rojo" ? "alerta" : "info"), el("div", { class: "aviso__texto", texto }));
 
-function botonSalir() {
-  return el("button", { class: "boton", type: "button", onclick: () => salir() }, icono("salir", "ic-sm"), "Salir");
-}
-
-function menuLateral(opciones) {
-  return el("aside", { class: "menu-lateral" },
-    logo(),
-    el("nav", { "aria-label": "Menú principal" },
-      el("ul", {}, opciones.map(([ic, txt], i) => el("li", {},
-        el("a", { class: "menu-lateral__item", href: "#", "aria-current": i === 0 ? "page" : null, "aria-disabled": i === 0 ? null : "true" },
-          icono(ic), txt))))),
-    el("div", { class: "menu-lateral__pie" },
-      el("div", { class: "tarjeta-lft" }, el("span", { class: "cuadro cuadro--azul cuadro--sm" }, icono("escudo", "ic-sm")),
-        el("strong", { texto: "Cumplimiento LFT" }), el("p", { texto: "Registro electrónico obligatorio desde el 1 de enero de 2027." }))));
-}
-
-function encabezado(yo, extra = []) {
-  const contexto = [fechaLarga(), yo.empresa?.nombre].filter(Boolean).join(" · ");
+function encabezado(yo, contexto) {
   const nombre = (yo.nombre || "").split(/\s+/)[0];
   return el("header", { class: "encabezado" },
-    el("div", {}, el("p", { class: "secundario", texto: contexto }), el("h1", { class: "titulo-grande", texto: `${saludo()}${nombre ? `, ${nombre}` : ""}` })),
-    el("div", { class: "encabezado__acciones" }, ...extra, botonSalir()));
+    el("div", {}, el("p", { class: "secundario", texto: [fechaLarga(), contexto].filter(Boolean).join(" · ") }),
+      el("h1", { class: "titulo-grande", texto: `${saludo()}${nombre ? `, ${nombre}` : ""}` })),
+    el("div", { class: "encabezado__acciones" }, botonSalir()));
 }
 
-function proximamente(texto) {
-  return el("div", { class: "aviso aviso--azul" }, icono("info"), el("div", { class: "aviso__texto", texto }));
+function menuSimple(opciones) {
+  return el("aside", { class: "menu-lateral" }, logo(),
+    el("nav", { "aria-label": "Menú principal" },
+      el("ul", {}, opciones.map(([ic, txt], i) => el("li", {},
+        el("span", { class: "menu-lateral__item", "aria-current": i === 0 ? "page" : null }, icono(ic), txt))))));
 }
 
 // ---------- Inicio por rol ----------
-function inicioPatron(yo) {
-  const contenido = el("main", { class: "contenido" },
-    encabezado(yo),
-    proximamente(yo.rol === "supervisor"
-      ? "Tu tablero de supervisor se conecta en la siguiente fase."
-      : "Tu tablero (asistencia de hoy, horas de la semana y reportes STPS) se conecta en la siguiente fase."));
-  return el("div", { class: "shell-patron" }, menuLateral(OPCIONES_PATRON), contenido);
+function inicioSupervisor(yo) {
+  return el("div", { class: "shell-patron" }, menuSimple([["tablero", "Tablero"]]),
+    el("main", { class: "contenido" }, encabezado(yo, yo.empresa?.nombre),
+      aviso("azul", "Tu tablero de supervisor se conecta en una fase siguiente.")));
 }
 
 function inicioSuperadmin(yo) {
@@ -117,48 +135,59 @@ function inicioSuperadmin(yo) {
       const r = await api("POST", "/v1/empresas", { nombre: v("emp-nombre"), rfc: v("emp-rfc"), admin: { nombre: v("adm-nombre"), email: v("adm-email") } });
       form.reset();
       resultado.append(el("div", { class: "aviso aviso--verde" }, icono("check"), el("div", { class: "aviso__texto" },
-        "Empresa creada.", el("small", { texto: r.correoEnviado ? "El administrador recibirá un correo para crear su contraseña." : "No se pudo enviar el correo; el administrador puede usar «Olvidé mi contraseña»." }))));
+        `Empresa creada. Clave para sus trabajadores: ${r.clave}.`,
+        el("small", { texto: r.correoEnviado ? "El administrador recibirá un correo para crear su contraseña." : "No se pudo enviar el correo; el administrador puede usar «Olvidé mi contraseña»." }))));
     } catch (e) {
-      const txt = e.codigo === "correo_existente" ? "Ese correo ya tiene cuenta." : e.detalle || (e.status === 429 ? "Demasiadas altas seguidas; espera un momento." : "No se pudo crear la empresa.");
-      resultado.append(el("div", { class: "aviso aviso--rojo" }, icono("alerta"), el("div", { class: "aviso__texto", texto: txt })));
+      const txt = e.codigo === "correo_existente" ? "Ese correo ya tiene cuenta." : mensajeErrorApi(e, "No se pudo crear la empresa.");
+      resultado.append(aviso("rojo", txt));
     } finally {
       cargando(enviar, false);
     }
   });
-  const contenido = el("main", { class: "contenido" },
-    encabezado({ ...yo, empresa: { nombre: "Diagonal Catorce" } }),
-    el("section", { class: "tarjeta" },
-      el("div", { class: "tarjeta__cabecera" }, el("h2", { class: "tarjeta__titulo", texto: "Nueva empresa" }), el("span", { class: "pildora pildora--violeta", texto: "Superadmin" })),
-      form, resultado));
-  return el("div", { class: "shell-patron" }, menuLateral([["edificio", "Empresas"]]), contenido);
+  return el("div", { class: "shell-patron" }, menuSimple([["edificio", "Empresas"]]),
+    el("main", { class: "contenido" }, encabezado(yo, "Diagonal Catorce"),
+      el("section", { class: "tarjeta" },
+        el("div", { class: "tarjeta__cabecera" }, el("h2", { class: "tarjeta__titulo", texto: "Nueva empresa" }), el("span", { class: "pildora pildora--violeta", texto: "Superadmin" })),
+        form, resultado)));
 }
 
-function inicioTrabajador(yo) {
+async function inicioTrabajador(yo) {
   document.body.classList.add("con-menu-inferior");
   const nombre = (yo.nombre || "").split(/\s+/)[0];
+  const ficha = await datos.miFicha(yo.empresa.id, yo.uid).catch(() => null);
+  const sitios = ficha ? await datos.sitios(yo.empresa.id).catch(() => []) : [];
+  const fotoUrl = ficha?.foto?.id ? await imagenPrivada(`/v1/trabajadores/foto?id=${ficha.id}`) : null;
+  const nombreSitio = Object.fromEntries(sitios.map((s) => [s.id, s.nombre]));
   const opciones = [["inicio", "Inicio"], ["historial", "Historial"], ["mi-horario", "Mi horario"], ["perfil", "Perfil"]];
+  const gafete = ficha?.gafete?.estado || "ninguno";
   return el("div", { class: "shell-trabajador" },
     el("header", { class: "encabezado-trab" },
       el("div", {}, el("p", { class: "secundario", texto: yo.empresa?.nombre || "" }), el("h1", { class: "titulo-grande", texto: `Hola${nombre ? `, ${nombre}` : ""}` })),
-      el("span", { class: "avatar avatar--lg", "aria-hidden": "true", texto: iniciales(yo.nombre) })),
+      fotoUrl ? el("img", { class: "avatar avatar--lg avatar--foto", src: fotoUrl, alt: "" }) : el("span", { class: "avatar avatar--lg", "aria-hidden": "true", texto: iniciales(yo.nombre) })),
     el("main", { class: "contenido-trab" },
-      proximamente("Tu jornada y el botón para checar se activan en la siguiente fase."),
+      ficha ? el("section", { class: "tarjeta" },
+        el("dl", { class: "ficha__datos" },
+          el("dt", { texto: "Número" }), el("dd", { texto: ficha.numero }),
+          el("dt", { texto: "Sitios" }), el("dd", { texto: (ficha.sucursales || []).map((s) => nombreSitio[s] || "—").join(", ") }),
+          el("dt", { texto: "Gafete" }), el("dd", {}, el("span", { class: `pildora pildora--${gafete === "activo" ? "verde" : gafete === "revocado" ? "rojo" : "blanca"}`, texto: gafete === "activo" ? "Activo" : gafete === "revocado" ? "Revocado: checa con número y PIN" : "Sin gafete" })))) : null,
+      aviso("azul", "El botón para checar tu entrada y salida se activa en la siguiente fase."),
       el("div", { class: "fila-fin" }, botonSalir())),
     el("nav", { class: "menu-inferior", "aria-label": "Menú" },
       el("ul", {}, opciones.map(([ic, txt], i) => el("li", {},
-        el("a", { class: "menu-inferior__item", href: "#", "aria-current": i === 0 ? "page" : null },
+        el("span", { class: "menu-inferior__item", "aria-current": i === 0 ? "page" : null },
           el("span", { class: "menu-inferior__pastilla" }, icono(ic)), txt))))));
 }
 
 function sinAcceso(texto) {
   return el("main", { class: "pantalla-centro" },
     el("section", { class: "tarjeta login" }, logo(),
-      el("div", { class: "aviso aviso--ambar" }, icono("alerta"), el("div", { class: "aviso__texto", texto })),
+      aviso("ambar", texto),
       el("button", { class: "boton boton--primario boton--bloque", type: "button", onclick: () => salir() }, "Volver al inicio")));
 }
 
 // ---------- Sesión ----------
 alCambiarSesion(async (usuario) => {
+  desmontarAdmin();
   if (!usuario) return mostrarPantalla("login");
   mostrarPantalla("cargando");
   const app = $("app");
@@ -170,10 +199,10 @@ alCambiarSesion(async (usuario) => {
       return mostrarPantalla("app");
     }
     const yo = await api("GET", "/v1/yo");
-    const vista = yo.rol === "superadmin" ? inicioSuperadmin(yo) : yo.rol === "trabajador" ? inicioTrabajador(yo) : inicioPatron(yo);
-    app.replaceChildren(vista);
     mostrarPantalla("app");
-    if (yo.rol === "trabajador") document.body.classList.add("con-menu-inferior");
+    if (yo.rol === "admin_empresa") return await montarAdmin(yo, app);
+    const vista = yo.rol === "superadmin" ? inicioSuperadmin(yo) : yo.rol === "trabajador" ? await inicioTrabajador(yo) : inicioSupervisor(yo);
+    app.replaceChildren(vista);
   } catch (e) {
     const txt = e.status === 403 ? "Tu cuenta no tiene acceso o fue dada de baja. Habla con tu administrador."
       : e.codigo === "sin_conexion" ? "Sin conexión con el servidor. Revisa tu internet e inténtalo de nuevo."

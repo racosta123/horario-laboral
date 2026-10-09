@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; manifest-src 'self'; worker-src 'self'; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://horario-laboral-proxy.acosta4770.workers.dev; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; manifest-src 'self'; worker-src 'self'; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com https://horario-laboral-proxy.acosta4770.workers.dev; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="theme-color" content="#FFFFFF">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -40,7 +40,11 @@
       </div>
       <div>
         <h1>Bienvenido</h1>
-        <p class="secundario">Entra con el correo y la contraseña que te dio tu empresa.</p>
+        <p class="secundario">Elige cómo entras a la app.</p>
+      </div>
+      <div class="pestanas" role="tablist" aria-label="Tipo de acceso">
+        <button id="tab-trabajador" class="pestana" type="button" role="tab" aria-selected="false" aria-controls="form-empleado">Soy trabajador</button>
+        <button id="tab-admin" class="pestana" type="button" role="tab" aria-selected="true" aria-controls="form-login">Soy administrador</button>
       </div>
       <form id="form-login" class="formulario" novalidate>
         <div class="campo">
@@ -51,11 +55,27 @@
           <label for="password">Contraseña</label>
           <input id="password" name="password" type="password" autocomplete="current-password" required maxlength="128">
         </div>
-        <div id="login-error" class="aviso aviso--rojo" role="alert" hidden></div>
-        <div id="login-info" class="aviso aviso--azul" role="status" hidden></div>
         <button id="btn-entrar" class="boton boton--primario boton--grande boton--bloque" type="submit">Entrar</button>
         <button id="btn-olvide" class="boton boton--fantasma boton--bloque" type="button">Olvidé mi contraseña</button>
       </form>
+      <form id="form-empleado" class="formulario" novalidate hidden>
+        <div class="campo">
+          <label for="acc-clave">Clave de tu empresa</label>
+          <input id="acc-clave" name="clave" type="text" autocomplete="organization" autocapitalize="characters" spellcheck="false" required maxlength="6" placeholder="Ej. K7M2QX">
+        </div>
+        <div class="campo">
+          <label for="acc-numero">Número de empleado</label>
+          <input id="acc-numero" name="numero" type="text" autocomplete="username" autocapitalize="characters" spellcheck="false" required maxlength="12">
+        </div>
+        <div class="campo">
+          <label for="acc-pin">PIN (6 dígitos)</label>
+          <input id="acc-pin" name="pin" type="password" inputmode="numeric" autocomplete="current-password" pattern="\d{6}" required maxlength="6">
+        </div>
+        <button id="btn-entrar-empleado" class="boton boton--primario boton--grande boton--bloque" type="submit">Entrar</button>
+        <p class="secundario login__ayuda">¿Olvidaste tu PIN? Pide a tu administrador que lo restablezca.</p>
+      </form>
+      <div id="login-error" class="aviso aviso--rojo" role="alert" hidden></div>
+      <div id="login-info" class="aviso aviso--azul" role="status" hidden></div>
       <p class="login__pie secundario"><svg class="ic ic-sm" aria-hidden="true"><use href="icons/iconos.svg#escudo"/></svg> Registro electrónico conforme a la LFT, art. 132 fr. XXXIV.</p>
     </section>
   </main>
