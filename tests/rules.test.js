@@ -59,7 +59,8 @@ async function sembrar() {
 before(async () => {
   env = await initializeTestEnvironment({
     projectId: PROJECT,
-    firestore: { rules: readFileSync("firebase/firestore.rules", "utf8") },
+    // REGLAS permite probar otra copia, p. ej. las descargadas de la nube (.tools/reglas-desplegadas.rules).
+    firestore: { rules: readFileSync(process.env.REGLAS || "firebase/firestore.rules", "utf8") },
   });
 });
 beforeEach(async () => {
