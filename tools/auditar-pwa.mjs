@@ -2,18 +2,21 @@
 // Requiere `node tools/serve.mjs` corriendo. Revisa: service worker activo, caché, manifest,
 // violaciones de CSP, errores de consola, peticiones a otros dominios y desbordes horizontales.
 // Guarda capturas en .tools/capturas/. Uso: node tools/auditar-pwa.mjs
-import { spawn } from "node:child_process";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { spawn, spawnSync } from "node:child_process";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 const BASE = process.env.BASE || "http://localhost:5173";
 const CHROME = process.env.CHROME || "C:/Program Files/Google/Chrome/Application/chrome.exe";
-const PUERTO = 9333;
+// Puerto y perfil nuevos en cada corrida: nunca se reutiliza un Chrome anterior.
+const PUERTO = 9300 + Math.floor(Math.random() * 600);
+mkdirSync(resolve(".tools"), { recursive: true });
+const PERFIL = mkdtempSync(resolve(".tools/chrome-auditoria-"));
 const DIR = resolve(".tools/capturas");
 mkdirSync(DIR, { recursive: true });
 
 const chrome = spawn(CHROME, [
-  "--headless=new", `--remote-debugging-port=${PUERTO}`, `--user-data-dir=${resolve(".tools/chrome-auditoria")}`,
+  "--headless=new", `--remote-debugging-port=${PUERTO}`, `--user-data-dir=${PERFIL}`,
   "--no-first-run", "--disable-gpu", "--hide-scrollbars", "about:blank",
 ], { stdio: "ignore" });
 const esperar = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -27,7 +30,7 @@ for (let i = 0; i < 100 && !ws; i++) {
     else await esperar(200);
   } catch { await esperar(200); }
 }
-if (!ws) { chrome.kill(); console.error("No se pudo conectar con Chrome (¿otra auditoría abierta?)"); process.exit(2); }
+if (!ws) { spawnSync("taskkill", ["/PID", String(chrome.pid), "/T", "/F"], { stdio: "ignore" }); console.error("No se pudo conectar con Chrome (¿otra auditoría abierta?)"); process.exit(2); }
 await new Promise((r) => ws.addEventListener("open", r, { once: true }));
 
 let id = 0;
@@ -103,7 +106,7 @@ const errores = eventos.filter((e) => (e.method === "Runtime.exceptionThrown") |
   .map((e) => e.params.exceptionDetails?.exception?.description || e.params.entry?.text);
 revisar(errores.length === 0, `sin errores en consola ${errores.length ? JSON.stringify(errores) : ""}`);
 const externos = [...new Set(eventos.filter((e) => e.method === "Network.requestWillBeSent").map((e) => new URL(e.params.request.url))
-  .filter((u) => !["localhost", "127.0.0.1"].includes(u.hostname) && u.protocol.startsWith("http")).map((u) => u.host))];
+  .filter((u) => u.host !== new URL(BASE).host && u.protocol.startsWith("http")).map((u) => u.host))];
 revisar(externos.length === 0, `sin peticiones a otros dominios al cargar ${externos.length ? JSON.stringify(externos) : ""}`);
 
 // Control: la CSP de verdad bloquea un script inline y un dominio externo.
@@ -113,8 +116,10 @@ const bloq = JSON.parse((await evaluar("sessionStorage.__csp || \"[]\"")) || "[]
 revisar(bloq.some((v) => v.startsWith("script-src")) && bloq.some((v) => v.startsWith("connect-src")) && !(await evaluar("window.__inline")), `control: CSP bloquea script inline y conexión externa (${bloq.length} bloqueos)`);
 
 ws.close();
-const cerrado = new Promise((r) => chrome.once("exit", r));
-chrome.kill();
-await cerrado;
+// En Windows hay que cerrar el árbol completo de procesos de Chrome.
+if (process.platform === "win32") spawnSync("taskkill", ["/PID", String(chrome.pid), "/T", "/F"], { stdio: "ignore" });
+else chrome.kill();
+await esperar(1000);
+try { rmSync(PERFIL, { recursive: true, force: true }); } catch { /* se limpia en la próxima */ }
 console.log(fallas.length ? `\n${fallas.length} FALLA(S)` : "\nTodo OK");
 process.exit(fallas.length ? 1 : 0);
