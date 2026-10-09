@@ -1,6 +1,6 @@
 // Service worker de Horario Laboral: guarda la app (mismo origen) para abrir sin conexión.
 // NUNCA guarda respuestas del Worker ni de Google (datos personales y tokens).
-const VERSION = "hl-v0.0.1";
+const VERSION = "hl-v0.0.2";
 const APP = [
   "./", "./index.html", "./manifest.webmanifest",
   "./css/tokens.css", "./css/componentes.css", "./css/app.css",

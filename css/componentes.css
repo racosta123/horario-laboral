@@ -220,7 +220,7 @@ img, svg { display: block; }
   transition: background var(--dur), color var(--dur);
 }
 .menu-lateral__item:hover { background: var(--fondo); color: var(--texto); }
-.menu-lateral__item[aria-current="page"] { background: var(--turquesa-claro); color: var(--turquesa-oscuro); }
+.menu-lateral__item[aria-current="page"] { background: var(--turquesa-claro); color: var(--turquesa-activo); }
 .menu-lateral__pie { margin-top: auto; }
 .tarjeta-lft { background: var(--azul-claro); border: 1px solid #D6E6FD; border-radius: var(--r-tarjeta); padding: var(--e-4); color: var(--texto); }
 .tarjeta-lft strong { display: block; font-weight: 800; color: var(--azul-texto); margin: var(--e-2) 0 2px; }
@@ -249,7 +249,7 @@ img, svg { display: block; }
   font-size: 11px; font-weight: 700; color: var(--texto-2); text-decoration: none;
 }
 .menu-inferior__item .ic { width: 22px; height: 22px; }
-.menu-inferior__item[aria-current="page"] { color: var(--turquesa-oscuro); }
+.menu-inferior__item[aria-current="page"] { color: var(--turquesa-activo); }
 .menu-inferior__item[aria-current="page"] .menu-inferior__pastilla { background: var(--turquesa-claro); }
 .menu-inferior__pastilla { padding: 3px 18px; border-radius: var(--r-pildora); transition: background var(--dur); }
 

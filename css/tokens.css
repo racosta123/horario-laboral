@@ -23,6 +23,7 @@
 
   /* Paleta: intenso / pastel / texto de estado (contraste AA sobre su pastel) */
   --turquesa: #0F9D94;   --turquesa-claro: #EAF8F7;  --turquesa-oscuro: #0B7F78;
+  --turquesa-activo: #0B7E77; /* menú activo: #0B7F78 apenas oscurecido para llegar a 4.5:1 sobre #EAF8F7 */
   --azul: #3B82F6;       --azul-claro: #EFF6FF;      --azul-texto: #1D4ED8;
   --verde: #22C55E;      --verde-claro: #ECFDF3;     --verde-texto: #15803D;
   --violeta: #8B5CF6;    --violeta-claro: #F5F3FF;   --violeta-texto: #6D28D9;

@@ -65,14 +65,14 @@ async function captura(nombre, completa = false) {
 const sinDesborde = () => evaluar("document.documentElement.scrollWidth <= innerWidth + 1");
 
 // 1) App: login, service worker, caché, manifest
-await abrir("/", 390, 844);
+await abrir("/", 375, 812);
 const login = await evaluar(`new Promise((ok) => { const t0 = Date.now(); (function v() { if (!document.getElementById("login").hidden) return ok(true); if (Date.now() - t0 > 10000) return ok(false); setTimeout(v, 100); })(); })`);
 revisar(login, "index: se muestra el inicio de sesión (sin sesión iniciada)");
 const sw = await evaluar(`navigator.serviceWorker.ready.then(r => !!r.active)`);
 revisar(sw === true, "service worker activo");
 await esperar(1000);
 const claves = await evaluar(`caches.keys()`);
-revisar(Array.isArray(claves) && claves.length === 1, `caché de la app: ${JSON.stringify(claves)}`);
+revisar(Array.isArray(claves) && claves.length === 1 && claves[0] === (await (await fetch(`${BASE}/sw.js`)).text()).match(/VERSION = "([^"]+)"/)[1], `caché de la app = versión actual de sw.js: ${JSON.stringify(claves)}`);
 const enCache = await evaluar(`caches.open("${claves?.[0]}").then(c => c.keys()).then(k => k.length)`);
 revisar(enCache >= 20, `archivos en caché: ${enCache}`);
 const man = await evaluar(`fetch("manifest.webmanifest").then(r => r.json()).then(m => m.icons.map(i => i.sizes + ":" + i.purpose).join(","))`);
@@ -80,7 +80,7 @@ revisar(/192x192:any/.test(man) && /512x512:any/.test(man) && /512x512:maskable/
 const instal = await cdp("Page.getInstallabilityErrors");
 const errInst = (instal.result?.installabilityErrors || []).map((e) => e.errorId);
 revisar(errInst.length === 0, `instalable según Chrome ${errInst.length ? JSON.stringify(errInst) : ""}`);
-revisar(await sinDesborde(), "index 390 px sin scroll horizontal");
+revisar(await sinDesborde(), "index 375 px sin scroll horizontal");
 await captura("login-movil");
 await abrir("/", 1440, 900);
 await captura("login-escritorio");
@@ -89,8 +89,8 @@ await captura("login-escritorio");
 await abrir("/diseno.html", 1440, 900);
 revisar(await sinDesborde(), "diseño 1440 px sin scroll horizontal");
 await captura("diseno-escritorio", true);
-await abrir("/diseno.html", 390, 844);
-revisar(await sinDesborde(), "diseño 390 px sin scroll horizontal (la tabla se desliza dentro de su tarjeta)");
+await abrir("/diseno.html", 375, 812);
+revisar(await sinDesborde(), "diseño 375 px sin scroll horizontal (la tabla se desliza dentro de su tarjeta)");
 await captura("diseno-movil", true);
 await evaluar(`document.getElementById("d-checar").click()`);
 await esperar(800);

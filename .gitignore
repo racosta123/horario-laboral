@@ -30,3 +30,6 @@ secrets/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Capturas locales para revisión (no se publican)
+capturas/
